@@ -1,5 +1,9 @@
 # First AMOS comparison cases
 
+This is the retained foundation snapshot. New cases and canonical host tests
+live in [the AMOS repository](https://github.com/lang198x/amos/tree/main/corpus).
+The observations below retain their original scope and fixture hashes.
+
 This is a small research corpus, **not parser test results**. There is no parser
 implementation in this repository. `cases.json` records earlier original-runtime
 observations; it is not a frozen public package or interchange schema.

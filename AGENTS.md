@@ -4,10 +4,12 @@ Read [PRINCIPLES.md](PRINCIPLES.md), MANIFESTO.md and PRACTICE.md. Follow the
 [org context](https://github.com/lang198x/.github/blob/main/AGENTS.md) and
 [umbrella ownership decision](https://github.com/stevehill1981/198x/blob/dd9bdfa0cf272fb87763c15afa45f6b35e0978e2/decisions/lang198x-language-tools.md).
 
-This is the language-tooling repository, currently at foundation/design stage.
-Start with README.md, docs/plans/amos-first-parser.md and corpus/amos/README.md.
-No parser or LSP implementation is present; do not describe the corpus checks as
-language acceptance. Agree the first design before implementation/dependencies.
+This is the coordination/research hub. The AMOS implementation, current corpus,
+plans and per-language decisions live in https://github.com/lang198x/amos.
+The original proposal and corpus here are retained research snapshots, not
+current implementation status or a second canonical test suite. No LSP or
+compiler implementation is present here. Keep implementation files small, with
+one supported instruction per Rust module in the AMOS repository.
 
 - Preserve source spelling and locations; distinguish unsupported, invalid and
   unknown compatibility. A native syntax test also performs static checks and

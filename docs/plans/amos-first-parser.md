@@ -1,6 +1,12 @@
 # First AMOS parser milestone
 
-**Status: proposal for design review.** The foundation contains comparison
+**Status: retained foundation proposal; superseded for implementation by the
+[agreed AMOS kit design](https://github.com/lang198x/amos/blob/main/decisions/first-language-kit.md).**
+
+The following records the original proposal. Current code, coverage and new
+comparison cases live in the AMOS repository.
+
+Original status: proposal for design review. The foundation contains comparison
 fixtures and documentation, not parser or language-server code. This proposal
 must be agreed before implementation or dependencies are added.
 

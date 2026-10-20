@@ -1,30 +1,36 @@
 # Lang198x
 
 Language analysis and language services for vintage programming languages.
-The first target is AMOS, including its product versions, release differences
-and extensions. Blitz follows through its own investigation.
+AMOS comes first, including its product versions, release differences and
+extensions. Blitz follows through its own investigation.
 
-**Status: foundation and design.** There is no parser, language server,
-interpreter or compiler implementation yet. This repository provides a reviewable
-first milestone and three source fixtures with retained native observations.
+**The first AMOS language kit lives in [amos](https://github.com/lang198x/amos).**
+It provides a bounded Rust parser/checker and distributable TextMate highlighting
+for Shiki and VS Code. Its coverage document distinguishes implemented source
+forms from original-runtime compatibility. Native files, LSP and compilation
+remain follow-on work.
+
+This repository is the coordination and research hub. Language implementations
+live in separate repositories, with language-specific ASTs and small interfaces
+shared only when real consumers need them.
 
 ## Start here
 
-- [First AMOS parser milestone](docs/plans/amos-first-parser.md): proposed surface,
-  implementation options and checks required before coding.
-- [AMOS comparison corpus](corpus/amos/README.md): what each fixture establishes,
-  its source provenance and the unqualified product lines.
-- [Scope and boundaries](decisions/README.md): ownership and migration direction.
+- [AMOS implementation and packages](https://github.com/lang198x/amos).
+- [AMOS coverage](https://github.com/lang198x/amos/blob/main/docs/coverage.md).
+- [Canonical AMOS corpus](https://github.com/lang198x/amos/tree/main/corpus).
+- [Scope and boundaries](decisions/README.md).
 
-The intended tools can support listing checks, diagnostics, source navigation,
-formatting and completion, with LSP adapters for editors. These are scope and
-future capabilities, not features shipped by this foundation.
+The [original milestone proposal](docs/plans/amos-first-parser.md) and
+[foundation corpus](corpus/amos/README.md) remain as research snapshots so existing
+links and evidence bindings continue to work. New AMOS cases and implementation
+plans belong in the AMOS repository.
 
 ## Contributing
 
-Useful first contributions are minimal source cases, original release notes and
-extension documentation, and named-version observations that can be reproduced.
-Record the exact source and installation, the action, the result and its limits.
+Useful contributions include minimal source cases, original release notes,
+extension documentation and named-version observations that can be reproduced.
+Record exact source and installation, the action, the result and its limits.
 Do not infer compatibility across releases or count a parser accepting code as
 evidence that the original runtime accepts or executes it.
 
@@ -40,5 +46,5 @@ the future workbench; language servers can serve other editors too.
 
 The project follows the [shared principles](PRINCIPLES.md). Authored project
 material uses [GPL-2.0-or-later](LICENSE), following the sibling tool workspaces.
-The teaching-source fixtures retain their [upstream MIT licence](corpus/LICENSE).
+The retained teaching fixtures keep their [upstream MIT licence](corpus/LICENSE).
 No original AMOS runtime, disk, ROM or native binary program is distributed.
