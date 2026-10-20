@@ -1,0 +1,43 @@
+{
+  "record_status": "research_corpus_not_a_public_package_API",
+  "new_native_trials": false,
+  "parser_implemented": false,
+  "cases": [
+    {
+      "id": "message",
+      "source": "sources/message.amos.txt",
+      "sha256": "eaf0563bbc824452c1b477970590945ad92cdbe2565bd840930a42d068661cf9",
+      "format": "plain_utf8_text_not_tokenised_amos",
+      "binding": "byte_identical_to_pinned_maintained_sample",
+      "profile": "amos-pro-2.00-observed",
+      "native_test_result": "accepted",
+      "parser_result": null,
+      "evidence": "https://github.com/code198x/docs/tree/d9c8a1005851adfec3314e68070378f466561fe5/audit/2026-10-amos-first-lesson-pair",
+      "evidence_phase": "message-finish"
+    },
+    {
+      "id": "edited-message",
+      "source": "sources/edited-message.amos.txt",
+      "sha256": "4f950a45c2ad1071c95f669ffaf53215135cd2702e377456727d1d87d3a87e30",
+      "format": "plain_utf8_text_not_tokenised_amos",
+      "binding": "byte_identical_to_pinned_maintained_sample",
+      "profile": "amos-pro-2.00-observed",
+      "native_test_result": "accepted",
+      "parser_result": null,
+      "evidence": "https://github.com/code198x/docs/tree/d9c8a1005851adfec3314e68070378f466561fe5/audit/2026-10-amos-first-lesson-pair",
+      "evidence_phase": "edit-message"
+    },
+    {
+      "id": "misspelt-command",
+      "source": "sources/misspelt-command.amos.txt",
+      "sha256": "c7ccc9e1ce533ab1b4425dc910d25f0f4d53b05d82ceb2af80aa0f2a0173d8f0",
+      "format": "plain_utf8_text_not_tokenised_amos",
+      "binding": "reconstructed_from_recorded_single_line_edit_not_exported_native_source",
+      "profile": "amos-pro-2.00-observed",
+      "native_test_result": "rejected",
+      "parser_result": null,
+      "evidence": "https://github.com/code198x/docs/tree/d9c8a1005851adfec3314e68070378f466561fe5/audit/2026-10-amos-first-lesson-pair",
+      "evidence_phase": "wrong-command"
+    }
+  ]
+}

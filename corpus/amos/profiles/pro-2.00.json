@@ -1,0 +1,13 @@
+{
+  "id": "amos-pro-2.00-observed",
+  "product": "AMOS Professional",
+  "release_label": "2.00",
+  "evidence_level": "previously_executed_specific_installation",
+  "emulator_source": "6ff929f366e8762d5d5b9dadf53367b2cc692821",
+  "machine": "PAL A1200, 2 MiB chip RAM, no fast RAM",
+  "kickstart_sha256": "6d43840d4099a74170ea0f0425b6257c3891ebcaa39c4d1840075a9ab22b5707",
+  "system_media_sha256": "7ffbfb5ed5c28869e323a2bff9a591ce519727be2e0dd66972a86ebfe7bcbfdc",
+  "complete_extension_qualification": false,
+  "evidence": "https://github.com/code198x/docs/tree/d9c8a1005851adfec3314e68070378f466561fe5/audit/2026-10-amos-first-lesson-pair",
+  "claim": "These source/test observations only; not complete language conformance."
+}
