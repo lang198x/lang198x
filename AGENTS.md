@@ -2,7 +2,7 @@
 
 Read [PRINCIPLES.md](PRINCIPLES.md), MANIFESTO.md and PRACTICE.md. Follow the
 [org context](https://github.com/lang198x/.github/blob/main/AGENTS.md) and
-[umbrella ownership decision](https://github.com/stevehill1981/198x/blob/dd9bdfa0cf272fb87763c15afa45f6b35e0978e2/decisions/lang198x-language-tools.md).
+[umbrella ownership decision](../../decisions/lang198x-language-tools.md).
 
 This is the coordination/research hub. The AMOS implementation, current corpus,
 plans and per-language decisions live in https://github.com/lang198x/amos.
