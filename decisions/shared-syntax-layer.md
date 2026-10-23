@@ -51,7 +51,7 @@ This record builds on the family's decision of 21 October 2026, which moved
 assembly front ends to Lang198x. That decision left the choice of tree library
 to stage 2 of its migration, and this record makes that choice. It also covers
 the BASICs. The first AMOS kit avoided a shared framework until a second
-language needed one. The Pasmo front end is that second language.
+language needed one. The PasmoNext front end is that second language.
 
 ## The pipeline
 
@@ -179,7 +179,7 @@ Many dialects differ only along a small set of axes:
 A **family** is a set of dialects that share one parser. A **profile** declares,
 as data, where one dialect sits on each axis. Candidate families include:
 
-- **Z80 assemblers:** PasmoNext and Pasmo, SjASMPlus, sjasm and more; see
+- **Z80 assemblers:** PasmoNext, SjASMPlus, sjasm and more; see
   *The Z80 family roadmap* below.
 - **Motorola 68000 assemblers:** Devpac, vasm's Motorola syntax, AsmOne, Seka
   and PhxAss.
@@ -206,7 +206,8 @@ growing code hook becomes a family of its own instead. Each starts in Asm198x,
 by installing the reference and recording its verdicts.
 
 1. **PasmoNext 0.1.3,** the first profile and the stage 2 gate. The curriculum
-   builds with it, and Asm198x's Pasmo verdicts came from it.
+   builds with it, and Asm198x's verdicts for its `pasmo` and `pasmonext`
+   dialect names came from it.
 2. **SjASMPlus,** which migrates from Asm198x's existing front end.
 3. **sjasm** (0.39, Konamiman's fork), from the MSX scene and used by SGDK.
    Asm198x treats `sjasm` as an alias for SjASMPlus today, so it needs its own
@@ -446,7 +447,7 @@ only once three languages show the same repetitive pattern. It would then use
 ## Effect on the migration
 
 Stage 2 of the assembly move becomes: build `lang198x-syntax`, plus the Z80
-family parser in `lang198x/z80-asm` with a Pasmo profile. The gate is
+family parser in `lang198x/z80-asm` with a PasmoNext 0.1.3 profile. The gate is
 unchanged. The new front end
 must match the existing front end's verdicts, including recorded rejections.
 The family is designed to take further profiles, but no other dialect moves in
@@ -523,3 +524,8 @@ Stop and reread this record if anyone proposes to:
   roadmap* records the list and its order. For the Z80 family, he also chose to
   keep lowering to `asm198x-ir` behind an optional feature, so the parser does
   not depend on Asm198x.
+- **23 October 2026.** Named PasmoNext explicitly. Steve asked that the first
+  Z80 profile be called PasmoNext, not Pasmo. "PasmoNext" means C Kirby's fork,
+  version 0.1.3 here; "Pasmo" means only Julian Albo's original. Asm198x's
+  `pasmo` and `pasmonext` dialect names both mean PasmoNext 0.1.3, for a Z80
+  and a Z80N target. The earlier entries' wording is unchanged.
