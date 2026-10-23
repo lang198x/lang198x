@@ -18,7 +18,12 @@ Three goals shape every choice in this record:
 ## The decision
 
 Lang198x builds one shared syntax layer, the crate `lang198x-syntax`. Every
-language front end uses it, whether the language is an assembler or a BASIC.
+language front end uses it. That includes assemblers, BASICs, and any other
+language we meet along the way, such as C, Pascal, Logo, Forth, Lisp or COBOL.
+
+The family aims to support more than 150 systems. For many of them, ours will
+be the only modern tooling. So adding a system should usually mean writing a
+profile and a corpus section, not a new parser.
 
 1. **The crate holds shared building blocks only.** These are the lossless
    tree, source text, tokens, provenance, diagnostics and test helpers. There is
@@ -27,12 +32,14 @@ language front end uses it, whether the language is an assembler or a BASIC.
 2. **We write the tree ourselves.** The crate has no runtime dependencies.
 3. **One hand-written parser per family of dialects.** A family is a group of
    dialects that share their structure. A *dialect profile* records, as data,
-   how each member differs.
+   how each member differs. Each family has one repository and one crate.
 4. **Provenance lives in side tables, not in the tree.** Every token can be
    traced back to the file, macro, include or native file it came from.
 5. **The formatter only changes what a profile marks as safe.** The default is
    to change nothing. A dialect's formatter ships only after the original tool
-   confirms that formatting changed nothing.
+   confirms that formatting changed nothing. For line-oriented languages it
+   never moves line breaks. Free-form languages may gain a layout engine later,
+   under its own decision.
 6. **Line-numbered BASICs get a program-order layer** above the tree. The tree
    always records the page exactly as written.
 7. **Original runtimes are the oracle.** Assemblers already have a reference
@@ -63,6 +70,10 @@ include. Expansion produces new text. The syntax layer parses that text into an
 The formatter and the language services work on source trees. The assembler
 works on the IR. Expansion trees are never formatted, because they are not
 source.
+
+For some languages, the source tree can only be shallow. Their full structure
+appears in expansion trees or in the semantic layer. See *Languages whose
+structure appears late*.
 
 ## Why we write our own tree
 
@@ -99,15 +110,23 @@ touching any language.
 - **Lossless.** Joining the text of every token in order gives back the input,
   byte for byte. Whitespace, comments and original spelling are all tokens in
   the tree.
+- **Spelling and meaning.** Each token records its exact source range. Its
+  logical text can differ, and working that out is the language's job. In C, a
+  backslash at the end of a line joins the next line on, even in the middle of a
+  word. COBOL continues a literal onto the next line with a `-` in column 7.
+  The tree keeps every byte where it sits, and the language combines the pieces.
 - **Kinds.** Each language numbers its own node and token kinds. A small shared
   set covers whitespace, newlines, comments, errors and *verbatim* regions (see
   *The formatter*).
 - **Lines.** Line-oriented languages give each line its own node. A comment then
   belongs to the line it sits on, which is what a formatter needs.
 - **Text.** Trees hold UTF-8 text. Offsets are 32-bit, so a file can be up to
-  4 GiB. Older character sets, such as PETSCII or the Amiga's, are decoded
-  before parsing, and the decoder records an offset map back to the original
-  bytes.
+  4 GiB. Older character sets are decoded before parsing, and the decoder
+  records an offset map back to the original bytes. Examples are PETSCII,
+  ATASCII, the Amiga's character set, Shift-JIS on the MSX and PC-88/98, and
+  KOI-7 and KOI-8 on Soviet machines. Decoding must be reversible. Some
+  characters have no exact Unicode equivalent, and they still have to survive
+  a round trip back to the native file.
 - **Building.** The parser calls `start_node`, `token` and `finish_node`. A
   checkpoint lets it wrap something it has already parsed in a new node, which
   is how a hand-written parser handles operator precedence. Misuse returns an
@@ -119,9 +138,9 @@ touching any language.
   text ranges, `token_at_offset` and `covering_element`. A new accessor is added
   only when a front end needs it.
 
-## Lexing driven by the parser
+## Parsing that needs context
 
-Some dialects cannot be split into tokens without knowing what the parser
+Some languages cannot be split into tokens without knowing what the parser
 expects next:
 
 - In vasm's Motorola syntax, whitespace after the operands starts a comment,
@@ -129,10 +148,20 @@ expects next:
   knowing the instruction.
 - C64 BASIC accepts `FORI=1TO10`, with no spaces between keywords.
 - Many assemblers treat a word in column 1 as a label and an indented word as an
-  instruction.
+  instruction. COBOL and RPG give whole column ranges fixed meanings.
 
 So each lexer works on demand. The parser asks for the next token in a given
 mode. Nothing has to split the whole file into tokens first.
+
+Some parsers also need what the front end currently knows:
+
+- C cannot tell whether `T * x;` declares a pointer or multiplies two values
+  until it knows whether `T` names a type.
+- Forth cannot parse past a word without knowing whether that word reads ahead
+  in the source, as `:` and `."` do.
+
+So a parser may ask its front end questions while it runs. The syntax layer
+still evaluates nothing itself.
 
 ## Dialect families and profiles
 
@@ -149,12 +178,32 @@ Many dialects differ only along a small set of axes:
 A **family** is a set of dialects that share one parser. A **profile** declares,
 as data, where one dialect sits on each axis. Candidate families include:
 
-- **Z80:** Pasmo, SjASMPlus and sjasm.
-- **Motorola 68000:** Devpac, vasm's Motorola syntax, AsmOne, Seka and PhxAss.
-- **6502:** ca65, DASM, xa and 64tass.
+- **Z80 assemblers:** Pasmo, SjASMPlus and sjasm.
+- **Motorola 68000 assemblers:** Devpac, vasm's Motorola syntax, AsmOne, Seka
+  and PhxAss.
+- **6502 assemblers:** DASM, xa and 64tass.
+- **Microsoft BASIC and its descendants,** found on the PET, C64, Apple II,
+  TRS-80, MSX, Dragon, Oric and many more.
+- **High-level languages with many vendors,** such as K&R and C89 C compilers,
+  UCSD and Turbo Pascal, or COBOL from different vendors.
+
+Some families have one member, because the dialect is unlike any other. ca65,
+with its token functions, is one. Atari BASIC, which checks syntax as each line
+is entered and stores a parsed form, is another. AMOS is a third.
 
 The verdict corpus proves membership. A dialect joins a family only when the
 family's parser matches its verdicts.
+
+**Repositories.** Each family has one repository and one crate, named for the
+family, such as `lang198x/z80-asm` publishing `lang198x-z80-asm`. A dialect is
+a profile inside its family's crate, not a repository of its own. At 150
+systems, a repository per dialect would mean hundreds of repositories, each
+with its own CI, release process and setup.
+
+**Keyword tables have one owner.** A tokenised BASIC's mapping from token bytes
+to keywords is needed by the Format198x codec and by the Lang198x parser. It
+lives in one place, with the codec, and the profile consumes it. Two copies
+would drift apart.
 
 Profiles also model the product and release, as the family rules require. A
 profile names the original tool version it describes. ca65's CPU modes are one
@@ -196,21 +245,54 @@ from. Origins include:
 | `Included` | From an included file, with the include site. |
 | `Expanded` | From a macro body, with the call site. |
 | `Synthesised` | Made by a token function such as ca65's `.concat` or `.ident`, with every input and the call site. |
-| `Decoded` | From a native or tokenised file, with its byte range. |
+| `Decoded` | From a native or tokenised file, a memory image or compiled code, with its byte range. |
 | `Merged` | From a BASIC `MERGE`, with the merged file. |
 
 Expansions nest, so origins chain upwards until they reach real source. Lowering
-carries the chain into `asm198x-ir` and each BASIC's semantic model. Diagnostics
-and debug information then point at the text a person wrote.
+carries the chain into `asm198x-ir` and each language's semantic model.
+Diagnostics and debug information then point at the text a person wrote.
+
+The same tools cover other languages' include and macro systems. Examples are
+the C preprocessor, COBOL's `COPY … REPLACING`, and Forth loading a block of
+source with `LOAD`.
+
+## Languages whose structure appears late
+
+For some languages, structure cannot be known from the page alone:
+
+- **C's preprocessor** can split one function across `#if` branches, with each
+  branch holding half its braces.
+- **Forth's grammar is partly defined by the program.** A word marked
+  `IMMEDIATE` runs while code is being compiled, and it can change how the rest
+  of the source is read.
+
+For these languages the source tree records only what is knowable as written:
+directives, lines and tokens for C, and whitespace-separated words for Forth.
+The full structure exists in expansion trees, or in the semantic layer once the
+front end has stepped through what the words do. The formatter and language
+services must work with this partial structure. A region the front end cannot
+interpret is *unknown*, not an error.
+
+**Some source is not a file.** Smalltalk and Lisp systems keep source in memory
+images. The Jupiter Ace keeps Forth words compiled and rebuilds their source
+when you list them. That source is recovered by a codec with a `Decoded`
+origin, and checked against the original system running in Emu198x, as for
+tokenised BASICs.
 
 ## The formatter
 
-**It never chooses line breaks.** In nearly every target language, a newline
-ends a statement. So the formatter only adjusts spacing, indentation and column
+**Line-oriented languages.** In assemblers and BASICs, a newline ends a
+statement. So the formatter only adjusts spacing, indentation and column
 alignment, plus keyword case where a profile allows it. It needs no layout
-engine.
+engine. It never adds, removes, reorders or renumbers lines.
 
-**It never adds, removes, reorders or renumbers lines.**
+**Free-form languages.** In C, Pascal, Logo, Forth and Lisp, line breaks carry
+no meaning. COBOL sentences also run across lines until a full stop. A
+formatter that never moves line breaks is still safe for these languages, just
+less useful. A layout engine that chooses line breaks may come later, as a
+shared component with its own decision, when the first free-form formatter
+needs it. Until then, these formatters follow the same rule as line-oriented
+ones.
 
 **It changes only what the profile marks as safe.** The default is to change
 nothing. These are the known hazards:
@@ -227,7 +309,8 @@ nothing. These are the known hazards:
   so a new space can change a conditional's outcome. Spacing inside macro
   arguments is left alone.
 - **Original tool limits.** Padding must not push a line past the original
-  tool's length limit.
+  tool's length limit. Forth screens are fixed at 16 lines of 64 characters.
+  COBOL's fixed format ends the program text at column 72.
 - **Values that depend on position.** Line numbers stay fixed, because lines
   never move. A profile that exposes column positions marks them as unsafe.
 
@@ -282,7 +365,9 @@ The assembler verdict corpus already records what each reference tool accepts,
 rejects and produces. BASICs gain the same kind of evidence. The original
 tokeniser runs in Emu198x, and we record what it stores and what `LIST` shows
 back. Those observations become expectations, written down before a surface is
-claimed. ROMs, snapshots and runtime-derived binaries are never published.
+claimed. The same applies to any language whose original implementation ran on
+the machine, such as a Forth system, Logo, or a resident Pascal or C compiler.
+ROMs, snapshots and runtime-derived binaries are never published.
 
 ## Typed views
 
@@ -326,7 +411,8 @@ only once three languages show the same repetitive pattern. It would then use
 ## Effect on the migration
 
 Stage 2 of the assembly move becomes: build `lang198x-syntax`, plus the Z80
-family parser with a Pasmo profile. The gate is unchanged. The new front end
+family parser in `lang198x/z80-asm` with a Pasmo profile. The gate is
+unchanged. The new front end
 must match the existing front end's verdicts, including recorded rejections.
 The family is designed to take further profiles, but no other dialect moves in
 stage 2.
@@ -343,6 +429,11 @@ tree.
   a need.
 - Not a file codec. Native and tokenised formats stay with Format198x.
 - Not a commitment to support every language or dialect now.
+- Not a decision on C++. A correct C++ parser is close to a compiler front end,
+  even for early dialects such as Cfront and Turbo C++. Whether to write one, or
+  use an existing front end with a compatible licence, is decided when a system
+  needs it.
+- Not a layout engine. That needs its own decision.
 - Not permission to move dialects early. They move as work reaches them.
 
 ## Drift triggers
@@ -357,6 +448,10 @@ Stop and reread this record if anyone proposes to:
   beyond what a profile allows;
 - ship a dialect's formatter before it passes its gates;
 - write a separate parser for a dialect that fits an existing family;
+- create a repository for a single dialect that belongs to an existing family;
+- keep a second copy of a keyword table that a codec already owns;
+- make a character-set decoder that cannot round-trip;
+- add a layout engine without its own decision;
 - grow a profile hook into a parser of its own;
 - add code generation for typed views before three languages need it;
 - publish documentation well above grade 10.
@@ -379,3 +474,10 @@ Stop and reread this record if anyone proposes to:
   formatter and include and macro handling. A review of blue-sky alternatives
   added dialect families with profiles and original-runtime oracles for BASICs.
   Steve set the three goals at the top of this record.
+- **23 October 2026.** Widened before adoption. Steve asked whether C, C++,
+  Forth and COBOL change the design, noting Pascal and Logo too, and the aim of
+  more than 150 systems. The core held. The record gained: shallow source trees
+  for languages whose structure appears late, parsers that consult front-end
+  state, the split between spelling and meaning, reversible character-set
+  decoding, keyword tables with one owner, source recovered from images, a
+  scoped line-break rule, and one repository per family.
