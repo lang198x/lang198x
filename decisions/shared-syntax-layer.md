@@ -1,6 +1,7 @@
 # One syntax layer for every Lang198x language
 
-**Status:** Adopted; implementation not started.
+**Status:** Adopted. The tree core is built and published as
+`lang198x-syntax` 0.1.1. The Z80 family has started in `lang198x/z80-asm`.
 **Decided:** 23 October 2026.
 
 ## Goals
@@ -178,7 +179,8 @@ Many dialects differ only along a small set of axes:
 A **family** is a set of dialects that share one parser. A **profile** declares,
 as data, where one dialect sits on each axis. Candidate families include:
 
-- **Z80 assemblers:** Pasmo, SjASMPlus and sjasm.
+- **Z80 assemblers:** PasmoNext and Pasmo, SjASMPlus, sjasm and more; see
+  *The Z80 family roadmap* below.
 - **Motorola 68000 assemblers:** Devpac, vasm's Motorola syntax, AsmOne, Seka
   and PhxAss.
 - **6502 assemblers:** DASM, xa and 64tass.
@@ -193,6 +195,39 @@ is entered and stores a parsed form, is another. AMOS is a third.
 
 The verdict corpus proves membership. A dialect joins a family only when the
 family's parser matches its verdicts.
+
+### The Z80 family roadmap
+
+Steve wants every assembler below supported in full, meaning parsed, lowered,
+assembled byte-identically to its reference across recorded verdicts, and
+named as an Asm198x dialect. The list is an intent and an order, not a claim:
+each dialect joins the family only on its verdicts, and one that needs a
+growing code hook becomes a family of its own instead. Each starts in Asm198x,
+by installing the reference and recording its verdicts.
+
+1. **PasmoNext 0.1.3,** the first profile and the stage 2 gate. The curriculum
+   builds with it, and Asm198x's Pasmo verdicts came from it.
+2. **SjASMPlus,** which migrates from Asm198x's existing front end.
+3. **sjasm** (0.39, Konamiman's fork), from the MSX scene and used by SGDK.
+   Asm198x treats `sjasm` as an alias for SjASMPlus today, so it needs its own
+   reference binary.
+4. **RASM,** the Amstrad CPC scene's assembler.
+5. **z88dk's z80asm,** the assembler behind a toolkit for more than a hundred
+   Z80 machines.
+6. **Nestor80,** which accepts MACRO-80 source, the period standard on CP/M
+   and MSX.
+7. **zmac,** from the TRS-80 scene, with modes for older assemblers.
+8. **Julian Albo's Pasmo 0.5.x,** the common upstream.
+9. **zasm,** with ZX80 and ZX81 output. Its C-style `#` directives may need a
+   family of their own.
+10. **WLA-DX,** one syntax across a dozen CPUs. Like ca65, it is likely a
+    multi-CPU family of its own.
+11. **Period-native assemblers** such as HiSoft GENS, MAXAM, Zeus and M80. They
+    run only inside Emu198x, so their verdicts come from the original-runtime
+    oracle described below.
+
+The order follows how much each adds for learners and the curriculum, and can
+change as work reaches each one.
 
 **Repositories.** Each family has one repository and one crate, named for the
 family, such as `lang198x/z80-asm` publishing `lang198x-z80-asm`. A dialect is
@@ -481,3 +516,10 @@ Stop and reread this record if anyone proposes to:
   state, the split between spelling and meaning, reversible character-set
   decoding, keyword tables with one owner, source recovered from images, a
   scoped line-break rule, and one repository per family.
+- **23 October 2026.** The tree core was built and published as
+  `lang198x-syntax` 0.1.1, and `lang198x/z80-asm` was created for stage 2.
+  Steve asked for every Z80 assembler worth supporting, beyond the three first
+  listed, after a survey of maintained and period tools. *The Z80 family
+  roadmap* records the list and its order. For the Z80 family, he also chose to
+  keep lowering to `asm198x-ir` behind an optional feature, so the parser does
+  not depend on Asm198x.
