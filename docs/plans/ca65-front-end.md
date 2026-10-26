@@ -1,6 +1,7 @@
 # Plan: the ca65 front end (stage 3)
 
-**Status:** Proposed 2026-10-26, for agreement before any code.
+**Status:** Agreed 2026-10-26. Step 1 is under way (asm198x#990); the
+repository exists.
 **Binding records:** this repository's
 [shared syntax layer decision](../../decisions/shared-syntax-layer.md) and
 198x's
@@ -61,9 +62,9 @@ coverage floor.
 
 ### 2. The repository
 
-`lang198x/ca65`, with the standard skeleton, crate `lang198x-ca65`, the
-optional `ir` feature as in `z80-asm`, and a manual first crates.io publish
-before Trusted Publishing.
+`lang198x/ca65` exists. It gets the standard skeleton, crate `lang198x-ca65`,
+the optional `ir` feature as in `z80-asm`, and a manual first crates.io
+publish before Trusted Publishing.
 
 ### 3. Lexer and profile axes
 
@@ -92,9 +93,9 @@ exports, feeding Asm198x's existing NES link.
 Make the walk the default for the main reader, move `fmt`, then delete the
 old path, as for PasmoNext.
 
-## Questions to settle
+## Settled 2026-10-26
 
-1. Does this order work, with verdicts and the #940 triage before the
-   repository exists?
-2. `lang198x/ca65` has to be created, and its crate published once by hand.
-   Who does that, and when?
+1. The order stands: verdicts and the asm198x#940 triage before the
+   repository has code.
+2. `lang198x/ca65` was created on 2026-10-26. Its crate is published once by
+   hand before Trusted Publishing, as the standard skeleton says.
