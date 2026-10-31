@@ -12,8 +12,8 @@ Build `lang198x/ca65` for the CPUs Asm198x's main ca65 reader covers, and
 move that reader onto it under the gate the PasmoNext profile passed: the new
 path matches the reference tool's recorded verdicts, including rejections,
 before it becomes the default. Then delete the old path. Stage 4 (65816 and
-HuC6280 as modes) and stage 5 (45GS02, M740, SWEET16) follow under their own
-plans.
+HuC6280 as modes, [`ca65-cpu-modes.md`](ca65-cpu-modes.md)) and stage 5
+(45GS02, M740, SWEET16) follow under their own plans.
 
 ## Settled before starting
 
