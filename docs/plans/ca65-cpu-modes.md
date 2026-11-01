@@ -1,6 +1,8 @@
 # Plan: ca65's other CPUs (stage 4)
 
-**Status:** Proposed 2026-10-31. Step 1 is under way.
+**Status:** Done 2026-11-01. Every step has landed: Lang198x-ca65 0.0.19 and
+0.0.20 and Asm198x #1024 and #1025. Stage 5 landed the same day without a
+plan of its own; see *Stage 5* at the end.
 **Binding records:** this repository's
 [shared syntax layer decision](../../decisions/shared-syntax-layer.md) and
 198x's
@@ -17,7 +19,7 @@ modes of the same front end, as the decision asks, and moves Asm198x's
 The other ca65 CPUs whose instruction sets Isa198x already has come in the
 same stage, because each is mostly data: the 6502X, 6502DTV, 65SC02, 65C02,
 W65C02 and 65CE02. Stage 5 (the 45GS02, M740 and SWEET16) needs Isa198x
-first and has its own plan.
+first.
 
 ## Settled before starting
 
@@ -105,3 +107,24 @@ the gate stage 3's formatter shipped under.
   wrong changes every immediate after it. The verdicts catch this only where
   they cover it, so step 4 adds probes for each width command and for
   `.smart` with `rep` and `sep`.
+
+## Stage 5
+
+The 45GS02, M740 and SWEET16 each went to Isa198x first, cited to sources
+added to 198x's reference library, then got a verdict section in Asm198x,
+then a support claim. No plan was written: each CPU was a smaller copy of
+step 2.
+
+- **45GS02:** the MEGA65 user guide's instruction tables. Isa198x 0.1.9,
+  Lang198x-ca65 0.0.21, Asm198x #1026.
+- **M740 and SWEET16:** the 740 Family Software Manual (Mitsubishi 1997,
+  Renesas 2006) and Wozniak's SWEET16 description. Isa198x 0.1.10,
+  Lang198x-ca65 0.0.22, Asm198x #1027.
+
+ca65 V2.19 gets three M740 encodings wrong: `INC A` and `DEC A`, the operand
+order of `LDM`, and where a bit branch on A counts from. Both manuals agree
+with each other against it, so the `ca65` profile follows the manual and
+Asm198x records three named divergences.
+
+`ca65_flat.rs` was not deleted outright. Its ca65 readers are gone, but
+rgbasm still uses the include walk it held, which moved to a neutral name.
