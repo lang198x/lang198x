@@ -1,7 +1,8 @@
 # Plan: the ca65 front end (stage 3)
 
-**Status:** Agreed 2026-10-26. Step 1 is under way (asm198x#990); the
-repository exists.
+**Status:** Done 2026-10-31. The walk is Asm198x's ca65 reader
+(asm198x#1022), and `fmt` runs on `lang198x_ca65::format` (asm198x#1023).
+Stages 4 and 5 are in [`ca65-cpu-modes.md`](ca65-cpu-modes.md).
 **Binding records:** this repository's
 [shared syntax layer decision](../../decisions/shared-syntax-layer.md) and
 198x's
