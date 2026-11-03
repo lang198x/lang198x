@@ -21,6 +21,10 @@ one supported instruction per Rust module in the AMOS repository.
   implementing a supported surface. Do not hard-code curriculum examples.
 - Published crates use `lang198x-`; Rust implementation follows edition 2024,
   Clippy clean and no unwrap in library code. No parser framework is selected.
+- Before building something for one assembler or language, look at how the
+  family's other tools do the same thing, and build it once where they share
+  it, not once per tool. Settle it in a cross-language record when it spans
+  families, as [reading settings](decisions/reading-settings.md) does.
 - Ask before adding dependencies, API breaks or new architectural patterns.
 - Assess migrations against their callers, old failure modes and byte/diagnostic
   contracts. This foundation performs none.
