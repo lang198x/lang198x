@@ -1,6 +1,6 @@
 # Settings that change how source is read
 
-**Status:** Proposed 2026-11-03.
+**Status:** Agreed 2026-11-03.
 **Builds on:** [one syntax layer for every Lang198x language](shared-syntax-layer.md),
 in particular *Parsing that needs context*, *Dialect families and profiles*
 and the rule that older character sets are decoded before parsing.
@@ -115,3 +115,6 @@ Stop and reread this record if anyone proposes to:
   ca65, since other assemblers surely do the same. A survey found reading
   settings in SjASMPlus, rgbasm, lwasm, vasm and Macro Assembler AS.
   Measurement showed that ca65 and SjASMPlus differ on macro bodies.
+- **3 November 2026.** Agreed. Steve set a rule for all such work: before
+  building something for one assembler, look at how other assemblers do the
+  same thing, and build it once for all of them rather than once each.
