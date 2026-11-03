@@ -18,3 +18,10 @@ line-numbered BASICs and original-runtime oracles.
 The [original milestone](../docs/plans/amos-first-parser.md) is retained research. The source-backed
 migration inventory (20 October 2026)
 identifies candidates without moving code or published APIs.
+
+[Settings that change how source is read](reading-settings.md) (proposed)
+sets one way for every family to handle commands such as ca65's `.feature`
+and SjASMPlus's `OPT`: the settings live in the mode the lexer reads under,
+a line read under an older mode is read again, and macro bodies follow
+whatever the tool was measured to do. Source arrives as bytes, through a
+reversible decoder in `lang198x-syntax`.
