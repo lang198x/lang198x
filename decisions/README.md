@@ -19,7 +19,7 @@ The [original milestone](../docs/plans/amos-first-parser.md) is retained researc
 migration inventory (20 October 2026)
 identifies candidates without moving code or published APIs.
 
-[Settings that change how source is read](reading-settings.md) (proposed)
+[Settings that change how source is read](reading-settings.md)
 sets one way for every family to handle commands such as ca65's `.feature`
 and SjASMPlus's `OPT`: the settings live in the mode the lexer reads under,
 a line read under an older mode is read again, and macro bodies follow
